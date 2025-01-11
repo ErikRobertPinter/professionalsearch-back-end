@@ -7,11 +7,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\PageViewController;
+use App\Http\Controllers\MailController;
 
 use App\Http\Middleware\Right;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/send-email', [MailController::class, 'sendEmail']);
 
 Route::post("addProfessional", [ProfessionalController::class, 'add']);
 Route::post("addUser", [UserController::class, 'add']);
