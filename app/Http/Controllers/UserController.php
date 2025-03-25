@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Users;
 
 class UserController extends Controller
 {
     function add(Request $request){
         $user = new User();
-        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->firstname = $request->firstname;
         $user->email = $request->email;
+        $user->phoneNumber = $request->phoneNumber;
         $user->password = $request->password;
         $result = $user->save();
 
@@ -33,8 +35,21 @@ class UserController extends Controller
         }
     }
 
-    function index(){
-        echo "hello";
-        exit;
+    public function getUserById($id){
+        /*$user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json($user);*/
+
+        $user = Users::where('id', $id)->first();
+        if($user){
+            return response()->json($user);
+        } else {
+            return response()->json("hiba a gépezetben");
+        }
+        
     }
 }

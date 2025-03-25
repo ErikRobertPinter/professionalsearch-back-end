@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Job extends Model
+class Profession extends Model
 {
     use HasFactory;
     public $timestamps=true;
-    protected $table = 'jobs';
+    protected $table = 'professions';
 
     protected $fillable = [
-        'userid',
-        'title',
-        'address',
-        'customer',
+        'user_id',
+        'profession_name',
+        'school',
+        'description'
     ];
 }

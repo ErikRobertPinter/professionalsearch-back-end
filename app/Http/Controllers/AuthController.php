@@ -14,8 +14,10 @@ class AuthController extends Controller
     public function register(Request $request){
         try {   
             $request->validate([
-                'name' => 'required|max:255',
+                'surname' => 'required|max:255',
+                'firstname' => 'required|max:255',
                 'email' => 'required|email|unique:users',
+                'phoneNumber' => 'required|max:255',
                 'password' => 'required|confirmed',
                 'type' => 'required|in:user,professional'
             ]);
@@ -61,13 +63,14 @@ class AuthController extends Controller
             $expiresAt->modify("+8 hours");
 
             $token = $user->createToken('auth_token', ['*'], $expiresAt);
-            $rights=null;
+            $right=null;
             if(!empty($user->roles)){
                 foreach($user->roles as $rolemap){
-                    $rights[]=$rolemap->role->role_name;
+                    //$rights[]=$rolemap->role->role_name;
+                    $right=$rolemap->role->role_name;
                 }
             }
-            $userdata=['id'=>$user->id, 'name'=>$user->name, 'email'=>$user->email, 'roles'=>$rights];
+            $userdata=['id'=>$user->id, 'name'=>$user->name, 'email'=>$user->email, 'roles'=>$right];
             $return = ['user' => $userdata,'token' =>$token->plainTextToken];
             return response()->json($return);
         } catch (ValidationException $e) {
