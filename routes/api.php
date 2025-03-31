@@ -9,6 +9,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\PageViewController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfessionController;
+use App\Http\Controllers\SkillController;
 
 
 use App\Http\Middleware\Right;
@@ -29,6 +30,9 @@ Route::post("login", [AuthController::class, 'login']);
 Route::get("logout", [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get("user_main", [UserController::class, 'index'])->middleware('auth:sanctum', Right::class.":user");
+
+
+Route::get('skills', [SkillController::class, 'getSkills']);
 
 
 //jobs apis

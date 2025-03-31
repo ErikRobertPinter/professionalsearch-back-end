@@ -12,6 +12,13 @@ use App\Models\UserRoleMap;
 class AuthController extends Controller
 {
     public function register(Request $request){
+
+        
+            $table->boolean('isProfessional');
+            $table->boolean('isAdmin');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
         try {   
             $request->validate([
                 'surname' => 'required|max:255',

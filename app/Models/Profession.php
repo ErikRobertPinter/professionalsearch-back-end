@@ -17,4 +17,8 @@ class Profession extends Model
         'school',
         'description'
     ];
+    public function user()
+    {
+        return $this->belongsTo('App\Models\Users', 'user_id', 'id');
+    }
 }

@@ -78,13 +78,37 @@ class Users extends Authenticatable
         return false;
     }
 
-    /*public function hasRoleById($roleId)
-    {
-        foreach($this->roles as $roleMap)
-        {
-if($roleMap->user_role_id == $roleId) return true;
-        }
 
-        return false;
-    }*/
+    //connecting to Profession model
+    public function professionals()
+    {
+        return $this->hasMany('App\Models\Profession', 'user_id', 'id');
+    }
+
+    public function assignProfessional($professional)
+    {
+        return $this->professionals()->attach($professional);
+    }
+
+    public function removeProfessional($professional)
+    {
+        return $this->professionals()->detach($professional);
+    }
+    
+    
+    //connecting to Settlement model
+    public function settlements()
+    {
+        return $this->hasMany('App\Models\Settlement', 'user_id', 'id');
+    }
+
+    public function assignSettlement($settlement)
+    {
+        return $this->settlements()->attach($settlement);
+    }
+
+    public function removeSettlement($settlement)
+    {
+        return $this->settlements()->detach($settlement);
+    }
 }
