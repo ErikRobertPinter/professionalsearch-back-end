@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -22,8 +22,16 @@ class UserController extends Controller
             return ["Result"=>"User has not been saved."];
         }
     }
-    function list($id=null){
-        return $id?User::find($id):User::all();
+    function listallusers($id=null){
+        if ($id) {
+            $users = User::find($id);
+            if (!$users) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+            return response()->json($user);
+        } else {
+            return response()->json(User::all());
+        }
     }
     function delete($id){
         $user = User::find($id);
@@ -44,7 +52,7 @@ class UserController extends Controller
 
         return response()->json($user);*/
 
-        $user = Users::where('id', $id)->first();
+        $user = User::where('id', $id)->first();
         if($user){
             return response()->json($user);
         } else {

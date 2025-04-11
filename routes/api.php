@@ -19,15 +19,19 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/send-email', [MailController::class, 'sendEmail']);
 
-Route::post("addProfessional", [ProfessionalController::class, 'add']);
-Route::post("addUser", [UserController::class, 'add']);
-Route::get("getUsers/{id?}", [UserController::class, 'list']);
-Route::get("user/{id}", [UserController::class, 'getUserById']);
-Route::delete("deleteUser/{id}", [UserController::class, 'delete']);
+
+
 //auth
 Route::put("register", [AuthController::class, 'register'])->middleware('api');
 Route::post("login", [AuthController::class, 'login']);
 Route::get("logout", [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+//users
+Route::post("addProfessional", [ProfessionalController::class, 'add']);
+Route::post("addUser", [UserController::class, 'add']);
+Route::get("getUsers/{id?}", [UserController::class, 'listallusers']);
+Route::get("user/{id}", [UserController::class, 'getUserById']);
+Route::delete("deleteuser/{id}", [UserController::class, 'delete']);
 
 Route::get("user_main", [UserController::class, 'index'])->middleware('auth:sanctum', Right::class.":user");
 

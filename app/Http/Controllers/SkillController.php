@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Job;
-use App\Models\Users;
+use App\Models\User;
 
 class SkillController extends Controller
 {
     public function getSkills(Request $request)
     {
-        $skills = Users::orderBy("surname");
+
+        $profession = urldecode($request->profession);
+        $settlement = urldecode($request->settlement);
+        $skills = User::orderBy("surname");
         if(!empty($request->profession)){
             $profession = $request->profession;
             $skills->whereHas('professionals', function($subQuery) use($profession) {

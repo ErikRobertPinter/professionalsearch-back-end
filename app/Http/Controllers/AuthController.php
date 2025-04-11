@@ -70,14 +70,24 @@ class AuthController extends Controller
             $expiresAt->modify("+8 hours");
 
             $token = $user->createToken('auth_token', ['*'], $expiresAt);
-            $right=null;
+            /*$right=null;
             if(!empty($user->roles)){
                 foreach($user->roles as $rolemap){
                     //$rights[]=$rolemap->role->role_name;
                     $right=$rolemap->role->role_name;
                 }
+            }*/
+            if ($user->isAdmin && $user->isProfessional) {
+                $right = 'admin-professional';
+            } elseif ($user->isAdmin) {
+                $role = 'admin';
+            } elseif ($user->isProfessional) {
+                $role = 'professional';
+            } else {
+                $role = 'user';
             }
-            $userdata=['id'=>$user->id, 'name'=>$user->name, 'email'=>$user->email, 'roles'=>$right];
+            //$userdata=['id'=>$user->id, 'name'=>$user->name, 'email'=>$user->email, 'roles'=>$right];
+            $userdata=['id'=>$user->id, 'surname'=>$user->surname, 'firstname'=>$user->firstname, 'email'=>$user->email, 'roles'=>$right];
             $return = ['user' => $userdata,'token' =>$token->plainTextToken];
             return response()->json($return);
         } catch (ValidationException $e) {
