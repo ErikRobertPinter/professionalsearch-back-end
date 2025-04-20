@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('email')->unique();
             $table->string('phoneNumber');
-            $table->boolean('isProfessional');
-            $table->boolean('isAdmin');
+            $table->boolean('isAdmin')->default(0);
+            $table->boolean('isProfessional')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

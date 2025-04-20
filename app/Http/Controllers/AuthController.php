@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use App\Models\UserRole;
@@ -12,23 +12,26 @@ use App\Models\UserRoleMap;
 class AuthController extends Controller
 {
     public function register(Request $request){
-
-        
-            $table->boolean('isProfessional');
-            $table->boolean('isAdmin');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
         try {   
             $request->validate([
                 'surname' => 'required|max:255',
                 'firstname' => 'required|max:255',
                 'email' => 'required|email|unique:users',
                 'phoneNumber' => 'required|max:255',
-                'password' => 'required|confirmed',
-                'type' => 'required|in:user,professional'
+                'password' => 'required',
             ]);
-            $user = Users::create($request->all());
+            //$user = User::create($request->all());
+
+            $user = User::create([
+                'surname' => $request->surname,
+                'firstname' => $request->firstname,
+                'email' => $request->email,
+                'phoneNumber' => $request->phoneNumber,
+                'isProfessional' => $request->isProfessional ?? false,
+                'isAdmin' => $request->isAdmin ?? false,
+                'password' => Hash::make($request->password),
+                
+            ]);
             switch($request->type){
                 case 'user':
                     $role = UserRole::where("role_name", "=", "user")->first();
@@ -44,7 +47,7 @@ class AuthController extends Controller
                 $rolemap->save();
             }
 
-            $token = $user->createToken($request->name);
+            $token = $user->createToken($request->surname);
 
             return response()->json([
                 'user' => $user,
@@ -61,7 +64,7 @@ class AuthController extends Controller
                 'password' => 'required'
             ]);
             
-            $user = Users::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
             if(!$user || !Hash::check($request->password, $user->password)){
                 asd;
@@ -70,24 +73,18 @@ class AuthController extends Controller
             $expiresAt->modify("+8 hours");
 
             $token = $user->createToken('auth_token', ['*'], $expiresAt);
-            /*$right=null;
-            if(!empty($user->roles)){
-                foreach($user->roles as $rolemap){
-                    //$rights[]=$rolemap->role->role_name;
-                    $right=$rolemap->role->role_name;
-                }
-            }*/
+            
             if ($user->isAdmin && $user->isProfessional) {
                 $right = 'admin-professional';
             } elseif ($user->isAdmin) {
-                $role = 'admin';
+                $right = 'admin';
             } elseif ($user->isProfessional) {
-                $role = 'professional';
+                $right = 'professional';
             } else {
-                $role = 'user';
+                $right = 'user';
             }
-            //$userdata=['id'=>$user->id, 'name'=>$user->name, 'email'=>$user->email, 'roles'=>$right];
-            $userdata=['id'=>$user->id, 'surname'=>$user->surname, 'firstname'=>$user->firstname, 'email'=>$user->email, 'roles'=>$right];
+            
+            $userdata=['id'=>$user->id, 'surname'=>$user->surname, 'firstname'=>$user->firstname, 'email'=>$user->email, 'role'=>$right];
             $return = ['user' => $userdata,'token' =>$token->plainTextToken];
             return response()->json($return);
         } catch (ValidationException $e) {

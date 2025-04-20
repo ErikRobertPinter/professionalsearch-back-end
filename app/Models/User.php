@@ -49,34 +49,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function roles()
-    {
-        return $this->hasMany('App\Models\UserRoleMap', 'user_id', 'id');
-    }
-
-    public function assignRole($role)
-    {
-        return $this->roles()->attach($role);
-    }
-
-    public function removeRole($role)
-    {
-        return $this->roles()->detach($role);
-    }
-    public function hasRole($name)
-    {
-        foreach($this->roles as $roleMap)
-        {
-            $nameParts = explode('|', $name);
-            if (!empty($nameParts)) {
-                foreach ($nameParts as $nameItem) {
-                    if (strtolower($roleMap->role->role_name) == strtolower($nameItem)) return true;
-                }
-            }
-        }
-
-        return false;
-    }
+   
+    
 
 
     //connecting to Profession model
@@ -111,4 +85,9 @@ class User extends Authenticatable
     {
         return $this->settlements()->detach($settlement);
     }
+
+    public function jobs()
+{
+    return $this->hasMany(Job::class, 'user_id');
+}
 }

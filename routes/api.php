@@ -22,7 +22,7 @@ Route::post('/send-email', [MailController::class, 'sendEmail']);
 
 
 //auth
-Route::put("register", [AuthController::class, 'register'])->middleware('api');
+Route::post("register", [AuthController::class, 'register'])->middleware('api');
 Route::post("login", [AuthController::class, 'login']);
 Route::get("logout", [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
@@ -43,6 +43,11 @@ Route::get('skills', [SkillController::class, 'getSkills']);
 Route::post("addJob", [JobController::class, 'add']);
 Route::get("listJobs", [JobController::class, 'list']);
 Route::get("jobs/{userId}", [JobController::class, 'myJobs']);
+
+//job statistics apis
+Route::get("jobstatistics/{userId}/{year}", [JobController::class, 'monthlyStatistics']);
+Route::get("monthlyProfits/{userId}/{year}", [JobController::class, 'monthlyProfits']);
+
 
 //profession apis
 Route::get("professions/{userId}", [ProfessionalController::class, 'myProfessions']);

@@ -17,4 +17,8 @@ class Job extends Model
         'address',
         'customer',
     ];
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id'); // ha a meződ 'userId', akkor ezt kell megadni
+}
 }
