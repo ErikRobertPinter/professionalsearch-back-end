@@ -44,9 +44,6 @@ class JobController extends Controller
     }
 
     public function monthlyStatistics($userId, $year){
-        /*$monthlyStatistics = DB::select("SELECT count(*) FROM jobs j join users u on jobs.userId = users.id where u.id = ? and year(j.created_at) = ? and month(j.created_at) = ?", [$userId, $year, $month]);
-        return response()->json($monthlyStatistics);*/
-
         $results = DB::select("
         SELECT 
             MONTH(j.created_at) as month, 
@@ -57,14 +54,12 @@ class JobController extends Controller
         GROUP BY MONTH(j.created_at)
     ", [$userId, $year]);
 
-    // Alapértelmezetten minden hónap 0
     $monthlyCounts = array_fill(1, 12, 0);
 
     foreach ($results as $row) {
         $monthlyCounts[$row->month] = $row->job_count;
     }
 
-    // Ha nulladik indextől szeretnéd (index 0 -> január), akkor:
     $monthlyCounts = array_values($monthlyCounts);
 
     return response()->json(array_values($monthlyCounts));

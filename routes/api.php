@@ -47,7 +47,7 @@ Route::get("jobs/{userId}", [JobController::class, 'myJobs']);
 //job statistics apis
 Route::get("jobstatistics/{userId}/{year}", [JobController::class, 'monthlyStatistics']);
 Route::get("monthlyProfits/{userId}/{year}", [JobController::class, 'monthlyProfits']);
-
+Route::get("usertypes", [UserController::class, 'userTypes']);
 
 //profession apis
 Route::get("professions/{userId}", [ProfessionalController::class, 'myProfessions']);

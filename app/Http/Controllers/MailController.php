@@ -9,14 +9,12 @@ class MailController extends Controller
 {
     public function sendEmail(Request $request)
     {
-        // E-mail adatainak validálása
         $validated = $request->validate([
             'to' => 'required|email',
             'subject' => 'required|string',
             'message' => 'required|string',
         ]);
 
-        // E-mail küldése
         try {
             Mail::to($validated['to'])->send(new SignupMail($validated['subject'], $validated['message']));
 

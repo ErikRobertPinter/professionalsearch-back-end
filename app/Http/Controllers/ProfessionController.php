@@ -16,7 +16,6 @@ class ProfessionController extends Controller
         $profession->save();
     }
     function myProfessions($userId) {
-        //$profession = Profession::where('userId', $userId)->get()->toJson();
         $profession = Profession::where('userId', $userId)->first();
         if($profession){
             return response()->json($profession);
