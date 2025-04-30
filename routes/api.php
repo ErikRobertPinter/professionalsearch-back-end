@@ -10,6 +10,7 @@ use App\Http\Controllers\PageViewController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\RatingController;
 
 
 use App\Http\Middleware\Right;
@@ -57,3 +58,7 @@ Route::post("addpageview", [PageViewController::class, 'addPageView']);
 
 //profession apis
 Route::post("addProfession", [ProfessionController::class, 'addProfession']);
+
+//ratings
+Route::post("addrating",  [RatingController::class, 'addRating']);
+Route::get("getratings/{id}",  [RatingController::class, 'getRatings']);
