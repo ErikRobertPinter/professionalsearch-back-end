@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
-use App\Models\UserRole;
-use App\Models\UserRoleMap;
+use App\Models\Carbon;
 
 class AuthController extends Controller
 {
@@ -20,11 +19,21 @@ class AuthController extends Controller
                 'phoneNumber' => 'required|max:255',
                 'password' => 'required',
             ]);
-            //$user = User::create($request->all());
+            
+            $profile_picture_file_name = null;
+            if($request->hasFile('profile_picture')){
+                $file = $request->file('profile_picture');
+                $extension = $file->getClientOriginalExtension();
+                $timestamp = Carbon::now()->format('Ymd_His');
+                $existingFiles = Storage::files('public/profile_pictures');
+                $profilePictureFileName = "{$timestamp}.{$extension}";
+                $file->storeAs('public/profile_pictures', $profilePictureFileName);
+            }
 
             $user = User::create([
                 'surname' => $request->surname,
                 'firstname' => $request->firstname,
+                'profile_picture'=>$request->profile_picture_file_name,
                 'email' => $request->email,
                 'phoneNumber' => $request->phoneNumber,
                 'isProfessional' => $request->isProfessional ?? false,
@@ -32,21 +41,6 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 
             ]);
-            switch($request->type){
-                case 'user':
-                    $role = UserRole::where("role_name", "=", "user")->first();
-                    break;
-                case 'professional':
-                    $role = UserRole::where("role_name", "=", "professional")->first();                   
-                    break;
-            }
-            if(!empty($role->id)){
-                $rolemap = new UserRoleMap();
-                $rolemap->user_id=$user->id;
-                $rolemap->user_role_id=$role->id;
-                $rolemap->save();
-            }
-
             $token = $user->createToken($request->surname);
 
             return response()->json([
@@ -56,6 +50,33 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             return response()->json($e->errors());
         }
+    }
+    
+    public function professionalSignup(Request $request){
+        try {
+            $data = $request->validate([
+                'surname' => 'required',
+                'firstname' => 'required',
+                'email' => 'required',
+                'phoneNumber' => 'required',
+                'password' => 'required',
+    
+                'education' => 'array',
+                'education'*'year_from' => 'required',
+                'education'*'month_from' => 'required',
+                'education'*'year_to' => 'required',
+                'education'*'month_to' => 'required',
+                'education'*'institution' => 'required',
+                'education'*'profession' => 'required',
+                'services' => 'array',
+                'services'*'service_type' => 'required',
+                'services'*'unit_type' => 'required',
+                'services'*'service_price' => 'required',
+            ]);
+        } catch (ValidationException $e){
+            return response()->json($e->errors());
+        }
+        
     }
     public function login(Request $request){
         try {

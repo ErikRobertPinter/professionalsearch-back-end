@@ -3,12 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfessionalController;
+use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\PageViewController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\ProfessionController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\RatingController;
 
@@ -52,13 +52,15 @@ Route::get("usertypes", [UserController::class, 'userTypes']);
 
 //profession apis
 Route::get("professions/{userId}", [ProfessionalController::class, 'myProfessions']);
+Route::post("addProfession", [ProfessionController::class, 'addProfession']);
+
+//professional apis
+Route::get("professions/{userId}", [ProfessionalController::class, 'myProfessions']);
 
 //page view
 Route::post("addpageview", [PageViewController::class, 'addPageView']);
 
-//profession apis
-Route::post("addProfession", [ProfessionController::class, 'addProfession']);
 
 //ratings
 Route::post("addrating",  [RatingController::class, 'addRating']);
-Route::get("getratings/{id}",  [RatingController::class, 'getRatings']);
+Route::get("getratings/{idxx}",  [RatingController::class, 'getRatings']);
